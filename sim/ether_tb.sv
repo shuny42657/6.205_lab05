@@ -9,9 +9,13 @@ logic rst;
 logic [1:0] rxd;
 logic crsdv;
 
-logic [1:0] axiov;
-logic axiod;
+logic [1:0] axiod;
+logic axiov;
 
+logic [47:0] addr_d,addr_s;
+logic [15:0] length;
+logic [15:0] data;
+logic [31:0] fcs;
 ether uut(
 	.clk(clk),
 	.rst(rst),
@@ -22,14 +26,145 @@ ether uut(
 
 always begin
 	#10;
-	clk = !clk;
+       	clk = !clk;
 end
+
 initial begin
-	//two clock cycles
-	axiov = 1;
+	$dumpfile("ether.vcd");
+	$dumpvars(0,ether_tb);
+	$display("Starting Sim");
+	clk = 0;
 	#20;
-	axiov = 0;
+	rst = 1;
+	#10;
+	rst = 0;
+	#10;
+	crsdv = 1;
+	//test case 1: valid packet
+	//valid preamble
+	for(int i = 0;i<56;i=i+1)begin
+		rxd = 2'b01;
+		#20;
+	end
+	//valid sfd
+	for(int i = 0;i<4;i = i+1)begin
+		if(i < 3)begin
+			rxd = 2'b01;
+		end else begin
+			rxd = 2'b11;
+		end
+		#20;
+	end
+	//D.A.
+	for(int i = 0;i < 48;i=i+1)begin
+		rxd = 2'b11;
+		#20;
+	end
+	//S.A.
+	for(int i = 0;i <48;i=i+1)begin
+		rxd = 2'b11;
+		#20;
+	end
+	//Data
+	for(int i = 0;i < 16;i = i+1)begin
+		rxd = 2'b10;
+		#20;
+	end
+	//FCS
+	for(int i = 0;i < 16;i = i+1)begin
+		rxd = 2'b11;
+		#20;
+	end
+	crsdv = 0;
 	#20;
+	crsdv = 1;
+	#20;
+	//test case 2: invalid preamble
+	//invalid preamble
+        for(int i = 0;i<56;i=i+1)begin
+		if(i == 20)begin
+			rxd = 2'b10;
+		end else begin
+			rxd = 2'b01;
+		end
+                #20;
+        end
+        //valid sfd
+        for(int i = 0;i<4;i = i+1)begin
+                if(i < 3)begin
+                        rxd = 2'b01;
+                end else begin
+                        rxd = 2'b11;
+                end
+                #20;
+        end
+        //D.A.
+        for(int i = 0;i < 48;i=i+1)begin
+                rxd = 2'b11;
+                #20;
+        end
+        //S.A.
+        for(int i = 0;i <48;i=i+1)begin
+                rxd = 2'b11;
+                #20;
+        end
+        //Data
+        for(int i = 0;i < 16;i = i+1)begin
+                rxd = 2'b10;
+                #20;
+        end
+        //FCS
+        for(int i = 0;i < 16;i = i+1)begin
+                rxd = 2'b11;
+                #20;
+        end
+        crsdv = 0;
+        #20;
+	crsdv = 1;
+	#20;
+	//test case 3: invalid preamble
+	//invalid preamble
+        for(int i = 0;i<56;i=i+1)begin
+		rxd = 2'b01;
+                #20;
+        end
+        //valid sfd
+        for(int i = 0;i<4;i = i+1)begin
+		if(i == 1)begin
+			rxd = 2'b11;
+		end else if(i ==3)begin
+			rxd = 2'b11;
+		end else begin
+			rxd = 2'b01;
+		end
+                #20;
+        end
+        //D.A.
+        for(int i = 0;i < 48;i=i+1)begin
+                rxd = 2'b11;
+                #20;
+        end
+        //S.A.
+        for(int i = 0;i <48;i=i+1)begin
+                rxd = 2'b11;
+                #20;
+        end
+        //Data
+        for(int i = 0;i < 16;i = i+1)begin
+                rxd = 2'b10;
+                #20;
+        end
+        //FCS
+        for(int i = 0;i < 16;i = i+1)begin
+                rxd = 2'b11;
+                #20;
+        end
+        crsdv = 0;
+        #20;
+
+
+	$display("Finishing Sim");
+	$finish;
 end
 endmodule
 
