@@ -38,7 +38,6 @@ initial begin
 	rst = 1;
 	#10;
 	rst = 0;
-	#10;
 	crsdv = 1;
 	//test case 1: valid packet
 	//valid preamble
@@ -122,20 +121,43 @@ initial begin
         #20;
 	crsdv = 1;
 	#20;
-	//test case 3: invalid preamble
-	//invalid preamble
+	//test case 3: valid preamble, tiny message(2 bits)
+	//preamble
         for(int i = 0;i<56;i=i+1)begin
 		rxd = 2'b01;
                 #20;
         end
         //valid sfd
         for(int i = 0;i<4;i = i+1)begin
-		if(i == 1)begin
-			rxd = 2'b11;
-		end else if(i ==3)begin
-			rxd = 2'b11;
-		end else begin
+		if(i<3)begin
 			rxd = 2'b01;
+		end else begin
+			rxd = 2'b11;
+		end
+                #20;
+        end
+	//only two bits
+	rxd = 2'b01;
+	#20;
+	rxd = 2'b01;
+	#20;
+        crsdv = 0;
+        #100;
+
+	crsdv = 1;
+	#20;
+        //test case 3 :invalid sfd
+        //invalid preamble
+        for(int i = 0;i<56;i=i+1)begin
+                rxd = 2'b01;
+                #20;
+        end
+        //valid sfd
+        for(int i = 0;i<4;i = i+1)begin
+		if(i < 3)begin
+			rxd = 2'b01;
+		end else begin
+			rxd = 2'b11;
 		end
                 #20;
         end
@@ -160,8 +182,7 @@ initial begin
                 #20;
         end
         crsdv = 0;
-        #20;
-
+        #100;
 
 	$display("Finishing Sim");
 	$finish;
