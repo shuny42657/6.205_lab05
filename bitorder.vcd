@@ -1,0 +1,140 @@
+$date
+	Wed Oct 26 22:04:58 2022
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module bitorder_tb $end
+$var wire 1 ! axiov $end
+$var wire 2 " axiod [1:0] $end
+$var reg 2 # axiid [1:0] $end
+$var reg 1 $ axiiv $end
+$var reg 1 % clk $end
+$var reg 1 & rst $end
+$scope module uut $end
+$var wire 2 ' axiid [1:0] $end
+$var wire 1 $ axiiv $end
+$var wire 1 % clk $end
+$var wire 1 & rst $end
+$var reg 2 ( axiod [1:0] $end
+$var reg 8 ) axiod_buffer_1 [7:0] $end
+$var reg 8 * axiod_buffer_2 [7:0] $end
+$var reg 1 ! axiov $end
+$var reg 2 + bit_count [1:0] $end
+$var reg 1 , buffer_switch $end
+$var reg 11 - byte_count [10:0] $end
+$var reg 1 . old_axiiv $end
+$upscope $end
+$scope begin $ivl_for_loop0 $end
+$var integer 32 / i [31:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b0 /
+x.
+bx -
+x,
+bx +
+bx *
+bx )
+bx (
+bx '
+x&
+0%
+x$
+bx #
+bx "
+x!
+$end
+#10000
+0!
+1%
+#20000
+0%
+1&
+#30000
+b0 -
+b0 +
+0,
+b0 "
+b0 (
+1%
+#40000
+0%
+1$
+0&
+#50000
+1.
+b1 +
+b1 #
+b1 '
+1%
+#60000
+0%
+#70000
+b10 +
+b1xxxxxx *
+1%
+b1 /
+#80000
+0%
+#90000
+b11 +
+b101xxxx *
+1%
+b10 /
+#100000
+0%
+#110000
+bx "
+bx (
+1!
+1,
+b0 +
+b10101xx *
+b11 #
+b11 '
+b1 -
+1%
+b11 /
+#120000
+0%
+#130000
+0!
+b1 "
+b1 (
+b1 +
+1%
+0$
+b100 /
+#140000
+0%
+#150000
+b10 +
+1%
+#160000
+0%
+#170000
+b11 +
+1%
+#180000
+0%
+#190000
+b0 +
+0.
+bx "
+bx (
+1%
+#200000
+0%
+#210000
+1%
+#220000
+0%
+#230000
+1%

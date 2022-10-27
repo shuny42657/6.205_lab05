@@ -41,7 +41,7 @@ always_ff @(posedge clk)begin
 				end
 				4'b0001:begin
 					if(rxd == 2'b01)begin
-						if(rxd_count == 6'd55)begin
+						if(rxd_count == 6'd27)begin
 							//preamble validating done
 							rxd_count <= 0;
 							now_state <= 4'b0010;
