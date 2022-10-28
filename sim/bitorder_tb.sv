@@ -68,12 +68,30 @@ initial begin
 	end
 	axiiv = 0;
 	#100;
-	//test case 1, 1 byte
+	//test case 2, 0.5 byte
 	axiiv = 1;
 	for(int i = 0;i<2;i=i+1)begin
 		axiid = 2'b01;
 		#20;
 	end
+	axiiv = 0;
+	#100;
+
+	//test case 3, 1.5 byte
+	axiiv = 1;
+	for(int i = 0;i<4;i = i+1)begin
+		if(i == 3)begin
+			axiid = 2'b01;
+		end
+		else begin
+			axiid = 2'b00;
+		end
+		#20;
+	end
+	axiid = 2'b01;
+	#20;
+	axiid = 2'b00;
+	#20
 	axiiv = 0;
 	#100;
 	$display("Finishing Sim");
