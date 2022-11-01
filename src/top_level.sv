@@ -8,7 +8,9 @@ module top_level(
 
 	output logic eth_rstn,
 	output logic eth_refclk,
-	output logic[15:0] led
+	output logic[15:0] led,
+	output logic[7:0] an,
+	output logic ca,cb,cc,cd,cd,ce,cf,cg
 
 );
 logic axiov_ether;
@@ -35,6 +37,14 @@ logic kill;
 logic old_done;
 cksum cs(.clk(eth_refclk),.rst(btnc),.axiiv(axiov_ether),.axiid(axiod_ether),.done(done),.kill(kill));
 
+logic axiov_aggregate;
+logic[1:0] axiod_aggregate;
+
+aggregate ag(.clk(eth_refclk),.rst(btnc),.axiiv(axiov_firewall),.axiid(axiod_firewall),.axiov(axiov_aggregate),.axiod(axiod_aggregate));
+
+logic[6:0] cat_out;
+logic[7:0] an_out;
+seven_segment_controller ssc(.clk_in(eth_refclk),.rst_in(btnc),.val_in(axiod_aggregate),.cat_out(cat_out),.an_out(an_out));
 always_ff @(posedge eth_refclk)begin
 	/*old_axiov <= axiov;
 	if(old_axiov != axiov && axiov)begin
@@ -48,7 +58,11 @@ always_ff @(posedge eth_refclk)begin
 
 end
 
+
+
 //assign led = axiov_count;
+assign {ca,cb,cc,cd,ce,cg,cf} = ~cat_out;
+assign an = an_out;
 assign led[13:0] = done_count;
 assign led[15] = kill;
 assign led[14] = done;
