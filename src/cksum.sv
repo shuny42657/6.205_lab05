@@ -1,38 +1,49 @@
 `default_nettype none
 `timescale 1ns / 1ps
-`define CKSUM	32'h1a3a_ccb2
+`define CKSUM   32'h1a3a_ccb2
 module cksum(
-	input wire clk,
-	input wire rst,
-	input wire axiiv,
-	input wire[1:0] axiid,
+        input wire clk,
+        input wire rst,
+        input wire axiiv,
+        input wire[1:0] axiid,
 
-	output logic done,
-	output logic kill
+        output logic done,
+        output logic kill
 );
-logic old_axiiv;
+logic now_check_phase;
+logic check_end;
 logic crc_rst;
-logic axiov;
 logic[31:0] axiod;
-crc32 crc32_bzip2 (.clk(clk),.rst(crc_reset),.axiiv(axiiv),.axiid(axiid),.axiov(axiov),.axiod(axiod)); 
+crc32 crc32_bzip2 (.clk(clk),.rst(crc_rst),.axiiv(axiiv),.axiid(axiid),.axiod(axiod));                
 always_ff @(posedge clk)begin
-	if(rst)begin
-		crc_reset <= 1;
-		axiov <= 0;
-		axiod <= 0;
-		done <= 0;
-		kill <= 0;
-	end
-	if(old_axiiv == ~axiiv && axiiv == 0)begin
-		done <= 1;
-		if(axiod == CKSUM)begin
+        if(rst)begin
+                done <= 0;
+                kill <= 0;
+                now_check_phase <= 0;
+		check_end <= 0;
+        end
+        if(~now_check_phase)begin
+                if(axiiv == 1)begin
+                        now_check_phase <= 1;
+			check_end <= 0;
+			done <= 0;
 			kill <= 0;
 		end else begin
-			kill <= 1;
+			check_end <= 0;
 		end
-	end
-	old_axiiv <= axiiv;
+        end else begin
+                if(axiiv == 0)begin
+                        now_check_phase <= 0;
+                        check_end <= 1;
+                        done <= 1;
+                        if(axiod == 32'h38_fb_22_84)begin
+                                kill <= 0;
+                        end else begin
+                                kill <= 1;
+                        end
+                end
+        end
 end
-assign crc_reset = rst | axiiv;
+assign crc_rst = rst || ~axiiv;
 endmodule
 `default_nettype wire
