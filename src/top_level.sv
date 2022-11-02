@@ -10,7 +10,7 @@ module top_level(
 	output logic eth_refclk,
 	output logic[15:0] led,
 	output logic[7:0] an,
-	output logic ca,cb,cc,cd,cd,ce,cf,cg
+	output logic ca,cb,cc,cd,ce,cf,cg
 
 );
 logic axiov_ether;
